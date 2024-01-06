@@ -10,7 +10,7 @@ const userArgs = process.argv.slice(2);
 const Book = require('./models/book');
 const Author = require('./models/author');
 const Genre = require('./models/genre');
-const BookInstance = require('./models/bookInstance');
+const BookInstance = require('./models/bookinstance');
 
 const genres = [];
 const authors = [];

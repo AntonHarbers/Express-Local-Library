@@ -12,7 +12,13 @@ var app = express();
 // mongoose setup
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
-const mongoDB = `CONNCECTIONSTRINGHERE`;
+const mongoDB = `CONNECTIONSTRINGHERE`;
+
+mongoose.connect(mongoDB);
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
