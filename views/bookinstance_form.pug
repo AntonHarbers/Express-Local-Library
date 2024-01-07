@@ -1,0 +1,44 @@
+extends layout 
+
+block content 
+    h1= title 
+
+    form(method="POST")
+        div.form-group
+            label(for="imprint") Imprint: 
+            input#imprint.form-control(type='text', placeholder='Copy Imprint' name='imprint' required value=(undefined===instance ? '' : instance.imprint))
+        div.form-group
+            label(for="book") Book: 
+            select#book.form-control(name='book' required)
+                option(value='') -- Select Book --
+                for book in books 
+                    if instance 
+                        if book._id.toString() === instance.book._id.toString()
+                            option(value=book._id selected) #{book.title}
+                        else 
+                            option(value=book._id) #{book.title}
+                    else 
+                        option(value=book._id) #{book.title}
+        div.form-group
+            label(for='status') Status: 
+                select#status.form-control(name='status')
+                    option(value='') -- Select Status -- 
+                    for status in statuses 
+                        if instance 
+
+                            if instance.status === status
+                                option(value=status selected) #{status}
+                            else
+                                option(value=status) #{status} 
+                        else
+                            option(value=status) #{status}
+            
+        div.form-group
+            label(for='due_back') Due Back Date: 
+            input#due_back.form-control(type='date', name='due_back' value=(undefined === instance ? '' : instance.due_back_formatted_update))
+        button.btn.btn-primary(type='submit') Submit
+
+    if errors 
+        ul 
+            for error in errors 
+                li!=error.msg
