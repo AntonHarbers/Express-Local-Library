@@ -12,7 +12,7 @@ var app = express();
 // mongoose setup
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
-const mongoDB = `CONNECTIONSTRINGHERE`;
+const mongoDB = `CONNCECTIONSTRINGHERE`;
 
 mongoose.connect(mongoDB);
 

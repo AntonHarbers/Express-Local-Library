@@ -1,0 +1,22 @@
+extends layout 
+
+block content 
+
+    h1 #{title} with ID: #{instance._id}
+    p #[strong Title :]
+        a(href=instance.book.url)  #{instance.book.title}
+    if instance.imprint
+        p Imprint: #{instance.imprint}
+    if instance.status == 'Available'
+        p.text-success  #{instance.status}
+    else if instance.status == 'Maintenance'
+        p.text-danger  #{instance.status}
+    else
+        p.text-warning  #{instance.status}
+
+    p Do you really want to delete this Book Copy?
+
+    form(method="POST")
+        div.form-group
+            input#instanceid.form-control(type='hidden', name='instanceid', value=instance._id)
+        button.btn.btn-primary(type="submit") Delete
