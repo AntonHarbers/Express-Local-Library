@@ -19,8 +19,6 @@ exports.genre_detail = asyncHandler(async (req, res, next) => {
     Book.find({ genre: req.params.id }, 'title summary').exec(),
   ]);
 
-  console.log(req.params.id);
-  console.log(genre);
   if (genre === null) {
     // No results
     const err = new Error('Genre not found');
@@ -132,9 +130,6 @@ exports.genre_update_post = [
   body('name', 'Genre must not be empty').trim().isLength({ min: 1 }).escape(),
   asyncHandler(async (req, res, next) => {
     const error = validationResult(req);
-
-    console.log(req.body);
-
     const genre = new Genre({
       name: req.body.name,
       _id: req.params.id,

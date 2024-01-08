@@ -6,28 +6,57 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var catalogRouter = require('./routes/catalog');
+const compression = require('compression');
+const helmet = require('helmet');
+
+var favicon = require('serve-favicon');
+
+require('dotenv').config();
 
 var app = express();
+
+// Set up rate limiter: maximum of twenty requests per minute
+const RateLimit = require('express-rate-limit');
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 100,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
 
 // mongoose setup
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
-const mongoDB = 'Connection string here';
+const dev_db_url = process.env.MONGODB_DEV;
+const mongoDB = process.env.MONGODB_URI || dev_db_url;
 
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
 mongoose.connect(mongoDB);
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// Set CSP headers to allow our Bootstrap and Jquery to be served
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      'script-src': ["'self'", 'code.jquery.com', 'cdn.jsdelivr.net'],
+    },
+  })
+);
+
+app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
